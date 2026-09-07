@@ -6,6 +6,7 @@ dist/
 .env.*
 !.env.example
 .vite/
+.vercel/
 coverage/
 .idea/
 .vscode/*
@@ -24,3 +25,4 @@ android/local.properties
 *.p8
 *.p12
 *.mobileprovision
+.vercel

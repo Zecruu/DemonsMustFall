@@ -10,7 +10,8 @@
     "preview": "vite preview --host",
     "typecheck": "tsc --noEmit",
     "ios:sync": "npm run build && cap sync ios",
-    "ios:open": "cap open ios"
+    "ios:open": "cap open ios",
+    "deploy": "npx vercel deploy --temporary --yes"
   },
   "engines": {
     "node": ">=20"

@@ -36,6 +36,14 @@ npm run build
 npm run preview
 ```
 
+## Live preview (Vercel)
+
+```bash
+npx vercel deploy --temporary --yes
+```
+
+That publishes a claimable preview. Open the printed URL to play, then visit the claim link to attach it to your Vercel account (anonymous deploys expire in about an hour). The repo includes `vercel.json` so Vite builds to `dist/`.
+
 ## How to play
 
 1. Choose **Campaign** (8 waves, last is The Falling Host) or **Endless**

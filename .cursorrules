@@ -2,7 +2,7 @@
 
 ## Scratchpad
 
-Task: Rebuild as a mobile tower-hero game — one-lane grid, place heroes and towers, wave-based demon hordes, monetization hooks, infinite hero scaling, campaign final wave + endless.
+Task: Deploy the tower-hero scaffold to Vercel so the user can test it live.
 
 Stack: TypeScript + Three.js + Vite + Capacitor iOS. Keep the native wrapper; replace the action-arena loop.
 
