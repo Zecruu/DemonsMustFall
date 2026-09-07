@@ -13,7 +13,7 @@ export class Board {
 
     const grass = new THREE.MeshStandardMaterial({ color: 0x1a1218, roughness: 0.92 });
     const pathMat = new THREE.MeshStandardMaterial({ color: 0x3a2430, roughness: 0.78 });
-    const buildMat = new THREE.MeshStandardMaterial({ color: 0x24181f, roughness: 0.86 });
+    const buildMat = new THREE.MeshStandardMaterial({ color: 0x3d2a28, roughness: 0.8 });
     const spawnMat = new THREE.MeshStandardMaterial({ color: 0x5c1020, emissive: 0x3a0810, roughness: 0.5 });
     const baseMat = new THREE.MeshStandardMaterial({ color: 0x2ec4b6, emissive: 0x0b3d38, roughness: 0.4 });
 

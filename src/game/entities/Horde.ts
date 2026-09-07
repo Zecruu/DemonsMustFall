@@ -17,33 +17,38 @@ export type Demon = {
 type PathPoint = { x: number; z: number };
 
 export class Horde {
-  readonly mesh: THREE.InstancedMesh;
   readonly demons: Demon[] = [];
-  private readonly dummy = new THREE.Object3D();
-  private readonly color = new THREE.Color();
+  private readonly visuals: THREE.Group[] = [];
+  private readonly bodyMats: THREE.MeshStandardMaterial[] = [];
   private nextFree = 0;
 
   constructor(scene: THREE.Scene) {
-    const geometry = new THREE.ConeGeometry(0.16, 0.34, 5);
-    const material = new THREE.MeshStandardMaterial({
-      color: 0x9b1d2e,
-      roughness: 0.7,
-      metalness: 0.08,
-    });
-    this.mesh = new THREE.InstancedMesh(geometry, material, MAX_DEMONS);
-    this.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-    this.mesh.castShadow = false;
-    this.mesh.count = MAX_DEMONS;
-    scene.add(this.mesh);
-    this.color.setHex(0x9b1d2e);
-    for (let i = 0; i < MAX_DEMONS; i += 1) {
-      this.mesh.setColorAt(i, this.color);
-    }
-    if (this.mesh.instanceColor) {
-      this.mesh.instanceColor.needsUpdate = true;
-    }
+    const bodyGeo = new THREE.IcosahedronGeometry(0.22, 0);
+    const hornGeo = new THREE.ConeGeometry(0.05, 0.18, 5);
 
     for (let i = 0; i < MAX_DEMONS; i += 1) {
+      const bodyMat = new THREE.MeshStandardMaterial({
+        color: 0xb42334,
+        emissive: 0x4a0b14,
+        roughness: 0.62,
+        metalness: 0.08,
+      });
+      const hornMat = new THREE.MeshStandardMaterial({ color: 0x3a0c14, roughness: 0.7 });
+      const group = new THREE.Group();
+      const body = new THREE.Mesh(bodyGeo, bodyMat);
+      body.position.y = 0.24;
+      const left = new THREE.Mesh(hornGeo, hornMat);
+      const right = new THREE.Mesh(hornGeo, hornMat);
+      left.position.set(-0.09, 0.42, 0.02);
+      right.position.set(0.09, 0.42, 0.02);
+      left.rotation.z = 0.4;
+      right.rotation.z = -0.4;
+      group.add(body, left, right);
+      group.visible = false;
+      scene.add(group);
+
+      this.visuals.push(group);
+      this.bodyMats.push(bodyMat);
       this.demons.push({
         alive: false,
         falling: false,
@@ -55,9 +60,7 @@ export class Horde {
         z: 0,
         fall: 0,
       });
-      this.hide(i);
     }
-    this.mesh.instanceMatrix.needsUpdate = true;
   }
 
   reset(): void {
@@ -71,7 +74,6 @@ export class Horde {
       demon.fall = 0;
       this.hide(i);
     }
-    this.mesh.instanceMatrix.needsUpdate = true;
   }
 
   living(): number {
@@ -105,7 +107,7 @@ export class Horde {
       demon.z = start.z;
       demon.fall = 0;
       this.nextFree = (i + 1) % MAX_DEMONS;
-      this.write(i, demon, 0x9b1d2e);
+      this.write(i, demon, 0xb42334);
       return true;
     }
     return false;
@@ -159,13 +161,12 @@ export class Horde {
       }
       demon.x = THREE.MathUtils.lerp(a.x, b.x, demon.t);
       demon.z = THREE.MathUtils.lerp(a.z, b.z, demon.t);
-      this.write(i, demon, 0x9b1d2e);
+      this.write(i, demon, 0xb42334);
 
       if (demon.hp <= 0) {
         this.kill(i, onFall, wave);
       }
     }
-    this.mesh.instanceMatrix.needsUpdate = true;
   }
 
   hurt(index: number, amount: number, onFall: (gold: number) => void, wave: number): boolean {
@@ -194,22 +195,24 @@ export class Horde {
   }
 
   private write(index: number, demon: Demon, hex: number): void {
-    const slump = demon.falling ? demon.fall * 1.2 : 0;
-    this.dummy.position.set(demon.x, 0.18 - slump * 0.12, demon.z);
-    this.dummy.rotation.set(slump * 1.4, index * 0.37, slump * 0.6);
-    this.dummy.scale.setScalar(demon.falling ? 1 - demon.fall * 0.45 : 1);
-    this.dummy.updateMatrix();
-    this.mesh.setMatrixAt(index, this.dummy.matrix);
-    this.mesh.setColorAt(index, this.color.setHex(hex));
-    if (this.mesh.instanceColor) {
-      this.mesh.instanceColor.needsUpdate = true;
+    const visual = this.visuals[index];
+    const mat = this.bodyMats[index];
+    if (!visual || !mat) {
+      return;
     }
+    const slump = demon.falling ? demon.fall * 1.2 : 0;
+    visual.visible = true;
+    visual.position.set(demon.x, slump * -0.08, demon.z);
+    visual.rotation.set(slump * 1.45, 0, slump * 0.35);
+    visual.scale.setScalar(demon.falling ? 1 - demon.fall * 0.4 : 1);
+    mat.color.setHex(hex);
+    mat.emissive.setHex(demon.falling ? 0x1a0508 : 0x4a0b14);
   }
 
   private hide(index: number): void {
-    this.dummy.position.set(0, -20, 0);
-    this.dummy.scale.setScalar(0.0001);
-    this.dummy.updateMatrix();
-    this.mesh.setMatrixAt(index, this.dummy.matrix);
+    const visual = this.visuals[index];
+    if (visual) {
+      visual.visible = false;
+    }
   }
 }

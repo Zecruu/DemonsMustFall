@@ -1,4 +1,4 @@
-import { CAMPAIGN_WAVES, TOWER_MAX_LEVEL } from "../data/constants";
+import { CAMPAIGN_WAVES, MAX_DEMONS, TOWER_MAX_LEVEL } from "../data/constants";
 
 export function heroDamage(base: number, level: number): number {
   return base * (1 + (level - 1) ** 1.18 * 0.38);
@@ -20,10 +20,10 @@ export function canUpgrade(kind: "hero" | "tower", level: number): boolean {
 export function waveDemonCount(wave: number, endless: boolean): number {
   const core = 18 + wave * 12 + Math.floor(wave * wave * 1.15);
   if (endless) {
-    return Math.min(480, core + wave * 8);
+    return Math.min(MAX_DEMONS, core + wave * 8);
   }
   const finalBonus = wave >= CAMPAIGN_WAVES ? 80 : 0;
-  return core + finalBonus;
+  return Math.min(MAX_DEMONS, core + finalBonus);
 }
 
 export function demonHp(wave: number): number {
