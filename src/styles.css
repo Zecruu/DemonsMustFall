@@ -1,0 +1,237 @@
+:root {
+  color-scheme: dark;
+  --ink: #f4e7c8;
+  --muted: #c9a27a;
+  --blood: #e85d4c;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #07060a;
+  font-family: "Palatino Linotype", Palatino, "Times New Roman", serif;
+  touch-action: none;
+  user-select: none;
+}
+
+#viewport {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hud {
+  position: fixed;
+  top: calc(10px + var(--safe-top));
+  left: calc(12px + var(--safe-left));
+  right: calc(12px + var(--safe-right));
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  color: var(--ink);
+  text-shadow: 0 2px 8px #000;
+  pointer-events: none;
+  z-index: 3;
+  font-size: 16px;
+}
+
+#obliterated {
+  margin-left: auto;
+  color: var(--blood);
+  font-weight: 700;
+}
+
+.hint {
+  position: fixed;
+  top: calc(52px + var(--safe-top));
+  left: calc(14px + var(--safe-left));
+  right: calc(14px + var(--safe-right));
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  text-shadow: 0 2px 8px #000;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.build-wrap {
+  position: fixed;
+  left: calc(10px + var(--safe-left));
+  right: calc(10px + var(--safe-right));
+  bottom: calc(10px + var(--safe-bottom));
+  z-index: 4;
+}
+
+.build-wrap.dim {
+  opacity: 0.55;
+}
+
+.build-bar {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.card,
+button {
+  font: inherit;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 72px;
+  padding: 6px 4px;
+  border: 1px solid rgba(244, 231, 200, 0.22);
+  border-radius: 10px;
+  background: rgba(12, 7, 10, 0.82);
+  color: var(--ink);
+  text-align: left;
+}
+
+.card.selected {
+  border-color: #e85d4c;
+  box-shadow: 0 0 0 1px #e85d4c;
+}
+
+.card.locked {
+  opacity: 0.45;
+}
+
+.card .kind {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.card strong {
+  font-size: 13px;
+}
+
+.card em,
+.card b {
+  font-size: 11px;
+  font-style: normal;
+  color: var(--muted);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.actions button,
+.overlay button {
+  min-height: 44px;
+  border: 0;
+  border-radius: 999px;
+  padding: 0 16px;
+  background: #e85d4c;
+  color: #1a080a;
+  font-weight: 700;
+}
+
+button.ghost {
+  background: rgba(244, 231, 200, 0.12);
+  color: var(--ink);
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: calc(28px + var(--safe-top)) 22px calc(28px + var(--safe-bottom));
+  background: linear-gradient(180deg, rgba(7, 6, 10, 0.35), rgba(7, 6, 10, 0.82));
+  text-align: center;
+  z-index: 6;
+}
+
+.overlay.sheet {
+  justify-content: flex-end;
+  background: rgba(7, 6, 10, 0.72);
+}
+
+.overlay[hidden],
+#play[hidden] {
+  display: none;
+}
+
+.kicker {
+  margin: 0;
+  color: var(--blood);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+h1,
+h2 {
+  margin: 0;
+  color: var(--ink);
+}
+
+h1 {
+  font-size: clamp(34px, 8vw, 58px);
+}
+
+.lede {
+  margin: 0;
+  max-width: 26rem;
+  color: var(--muted);
+}
+
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(320px, 100%);
+}
+
+.choices button {
+  width: 100%;
+}
+
+#shop-list {
+  width: min(420px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+}
+
+.shop-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(12, 7, 10, 0.86);
+  color: var(--ink);
+}
+
+.shop-row p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}

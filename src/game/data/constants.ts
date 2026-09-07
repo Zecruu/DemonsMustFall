@@ -1,0 +1,10 @@
+export const CELL = 1;
+export const GRID_COLS = 7;
+export const GRID_ROWS = 11;
+export const MAX_DEMONS = 280;
+export const STARTING_GOLD = 240;
+export const STARTING_GEMS = 0;
+export const STARTING_LIVES = 20;
+export const CAMPAIGN_WAVES = 8;
+export const TOWER_MAX_LEVEL = 5;
+export const HERO_UNLOCK_GEMS = 80;

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#07060a" />
+    <title>Demons Must Fall</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <canvas id="viewport"></canvas>
+
+      <section id="title" class="overlay">
+        <p class="kicker">Tower heroes</p>
+        <h1>Demons Must Fall</h1>
+        <p class="lede">One lane. A grid. Heroes and towers. Hordes that should not survive the walk.</p>
+        <div class="choices">
+          <button id="mode-campaign" type="button">Campaign · 8 waves</button>
+          <button id="mode-endless" class="ghost" type="button">Endless</button>
+        </div>
+      </section>
+
+      <div id="play" hidden>
+        <header id="hud" class="hud">
+          <div id="lives"></div>
+          <div id="gold"></div>
+          <div id="gems"></div>
+          <div id="wave"></div>
+          <div id="obliterated"></div>
+        </header>
+        <p id="hint" class="hint"></p>
+        <div id="build-wrap" class="build-wrap">
+          <div id="build-bar" class="build-bar"></div>
+          <div class="actions">
+            <button id="unleash" type="button">Unleash wave</button>
+            <button id="shop-open" class="ghost" type="button">Shop</button>
+          </div>
+        </div>
+      </div>
+
+      <section id="shop" class="overlay sheet" hidden>
+        <p class="kicker">Bloodstones</p>
+        <h2>Shop</h2>
+        <p id="shop-gems" class="lede"></p>
+        <p class="hint">StoreKit / App Store IAP is stubbed. Preview grants let you test unlocks.</p>
+        <div id="shop-list"></div>
+        <button id="shop-close" class="ghost" type="button">Close</button>
+      </section>
+
+      <section id="end" class="overlay" hidden>
+        <h1 id="end-title"></h1>
+        <p id="end-body" class="lede"></p>
+        <button id="again" type="button">Return to keep</button>
+      </section>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
