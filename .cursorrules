@@ -2,19 +2,17 @@
 
 ## Scratchpad
 
-Task: Replace the placeholder README-only repo with a playable first-version scaffold for an indie action/combat game named Demons Must Fall. Open a PR into main.
+Task: Pivot the scaffold from Phaser to Three.js for a mobile App Store game. Keep a playable combat skeleton, Capacitor iOS path, and update the existing PR.
 
-Stack: TypeScript + Phaser 4.2 + Vite. 2D arena combat, web-first, desktop later via Tauri/Electron.
+Stack: TypeScript + Three.js + Vite + Capacitor (iOS / App Store). Touch-first controls, keyboard still works for desktop preview.
 
 Plan:
-[X] Create feature branch cursor/game-scaffold-ced6
-[X] Write project config (package.json, tsconfig, vite, gitignore)
-[X] Implement playable combat loop (player, demons, scene, HUD)
-[X] Write README with run instructions
-[ ] Install deps, typecheck, run the game
-[ ] Commit, push, open PR
-[ ] Browser-verify the playable loop
-[ ] Attach walkthrough artifacts
+[X] Existing Phaser scaffold PR is the starting point
+[ ] Remove Phaser and add Three.js + Capacitor
+[ ] 3D arena combat loop with touch joystick + strike
+[ ] README: web run + iOS/App Store steps
+[ ] Typecheck, build, commit, push, update PR
+[ ] Browser-verify desktop + mobile viewports
 
 ## Lessons
 
@@ -34,9 +32,12 @@ Plan:
 - Phaser 4 unifies v3 FX/Masks into Filters; avoid createGeometryMask/setMask in new code
 - Phaser 4 arcade gravity is a vector `{ x, y }`, not a single `y` number
 - Vite 8 uses Rolldown: split vendor chunks with `build.rolldownOptions.output.codeSplitting.groups`, not object-form `manualChunks`
+- This game targets iOS App Store: prefer Three.js + Capacitor, not Phaser. Native archive still requires a Mac + Xcode.
+- Three.js 0.185 ships JS only; install `@types/three` for `tsc`
 
 ## Project
 
 - Keep combat numbers in `src/game/data/constants.ts`
-- Keep Phaser-light rules in `src/game/systems`
-- Bake placeholder art in `BootScene` until real assets exist
+- Keep engine-light rules in `src/game/systems`
+- Ground plane is XZ; combat helpers use x/y mapped to x/z
+- Touch controls are the primary input; keyboard is for desktop preview

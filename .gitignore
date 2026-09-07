@@ -10,3 +10,17 @@ coverage/
 .idea/
 .vscode/*
 !.vscode/extensions.json
+
+# Native / App Store
+ios/App/Pods
+ios/App/output
+ios/DerivedData
+ios/App/App/public
+android/.gradle
+android/app/build
+android/local.properties
+*.keystore
+*.jks
+*.p8
+*.p12
+*.mobileprovision

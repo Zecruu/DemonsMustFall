@@ -1,39 +1,42 @@
-import Phaser from "phaser";
+import * as THREE from "three";
 import {
+  ARENA_HALF,
   DEMON_CONTACT_COOLDOWN_MS,
   DEMON_MAX_HP,
+  DEMON_RADIUS,
   DEMON_SPEED,
-  DEMON_TEXTURE,
   DEMON_TOUCH_DAMAGE,
 } from "../data/constants";
+import { createDemonMesh } from "../meshes";
 import { applyDamage, canAct } from "../systems/combat";
 
-export class Demon extends Phaser.Physics.Arcade.Sprite {
+export class Demon {
+  readonly mesh: THREE.Group;
   hp = DEMON_MAX_HP;
   falling = false;
+  gone = false;
+  readonly radius = DEMON_RADIUS;
 
   private nextTouchAt = 0;
   private struckThisSwing = false;
+  private fallT = 0;
 
-  constructor(scene: Phaser.Scene, x: number, y: number) {
-    super(scene, x, y, DEMON_TEXTURE);
-    scene.add.existing(this);
-    scene.physics.add.existing(this);
-
-    this.setDepth(8);
-    this.setCollideWorldBounds(true);
-
-    const body = this.requireBody();
-    body.setCircle(15, 9, 12);
-    body.setBounce(0.15);
+  constructor(scene: THREE.Scene, x: number, z: number) {
+    this.mesh = createDemonMesh();
+    this.mesh.position.set(x, 0, z);
+    scene.add(this.mesh);
   }
 
   get isAlive(): boolean {
-    return this.hp > 0 && !this.falling && this.active;
+    return this.hp > 0 && !this.falling && !this.gone;
   }
 
   get touchDamage(): number {
     return DEMON_TOUCH_DAMAGE;
+  }
+
+  beginSwing(): void {
+    this.struckThisSwing = false;
   }
 
   canTouch(now: number): boolean {
@@ -44,19 +47,25 @@ export class Demon extends Phaser.Physics.Arcade.Sprite {
     this.nextTouchAt = now + DEMON_CONTACT_COOLDOWN_MS;
   }
 
-  beginSwing(): void {
-    this.struckThisSwing = false;
-  }
-
-  chase(targetX: number, targetY: number): void {
+  chase(target: THREE.Vector3, dt: number): void {
     if (!this.isAlive) {
-      this.setVelocity(0, 0);
       return;
     }
 
-    const angle = Phaser.Math.Angle.Between(this.x, this.y, targetX, targetY);
-    this.setVelocity(Math.cos(angle) * DEMON_SPEED, Math.sin(angle) * DEMON_SPEED);
-    this.setFlipX(targetX < this.x);
+    const dx = target.x - this.mesh.position.x;
+    const dz = target.z - this.mesh.position.z;
+    const length = Math.hypot(dx, dz) || 1;
+    this.mesh.position.x = THREE.MathUtils.clamp(
+      this.mesh.position.x + (dx / length) * DEMON_SPEED * dt,
+      -ARENA_HALF + 0.8,
+      ARENA_HALF - 0.8,
+    );
+    this.mesh.position.z = THREE.MathUtils.clamp(
+      this.mesh.position.z + (dz / length) * DEMON_SPEED * dt,
+      -ARENA_HALF + 0.8,
+      ARENA_HALF - 0.8,
+    );
+    this.mesh.rotation.y = Math.atan2(dx, dz);
   }
 
   takeHit(amount: number): boolean {
@@ -66,23 +75,10 @@ export class Demon extends Phaser.Physics.Arcade.Sprite {
 
     this.struckThisSwing = true;
     this.hp = applyDamage(this.hp, amount);
-    this.setTint(0xffe8a3);
-
-    const knockback = new Phaser.Math.Vector2(this.body?.velocity.x ?? 0, this.body?.velocity.y ?? 0)
-      .normalize()
-      .scale(-220);
-    this.setVelocity(knockback.x, knockback.y);
-
-    this.scene.time.delayedCall(80, () => {
-      if (this.active && !this.falling) {
-        this.clearTint();
-      }
-    });
-
+    this.flash(0xffe8a3, 90);
     if (this.hp <= 0) {
       this.fall();
     }
-
     return true;
   }
 
@@ -90,32 +86,45 @@ export class Demon extends Phaser.Physics.Arcade.Sprite {
     if (this.falling) {
       return;
     }
-
     this.falling = true;
     this.hp = 0;
-    this.requireBody().enable = false;
-    this.setVelocity(0, 0);
-    this.setTint(0x5a1d28);
-
-    this.scene.tweens.add({
-      targets: this,
-      angle: this.flipX ? -95 : 95,
-      alpha: 0,
-      y: this.y + 36,
-      scale: 0.85,
-      duration: 460,
-      ease: "Quad.easeIn",
-      onComplete: () => {
-        this.destroy();
-      },
-    });
   }
 
-  private requireBody(): Phaser.Physics.Arcade.Body {
-    const body = this.body;
-    if (!(body instanceof Phaser.Physics.Arcade.Body)) {
-      throw new Error("Demon is missing an Arcade Physics body");
+  updateFall(dt: number): void {
+    if (!this.falling || this.gone) {
+      return;
     }
-    return body;
+
+    this.fallT += dt / 0.46;
+    const t = Math.min(1, this.fallT);
+    this.mesh.rotation.x = t * (Math.PI / 2);
+    this.mesh.position.y = THREE.MathUtils.lerp(0, -0.15, t);
+    this.mesh.scale.setScalar(THREE.MathUtils.lerp(1, 0.86, t));
+    if (t >= 1) {
+      this.gone = true;
+    }
+  }
+
+  dispose(scene: THREE.Scene): void {
+    scene.remove(this.mesh);
+    this.gone = true;
+  }
+
+  private flash(color: number, ms: number): void {
+    this.mesh.traverse((child) => {
+      if (child instanceof THREE.Mesh && child.material instanceof THREE.MeshStandardMaterial) {
+        child.material.emissive.setHex(color);
+      }
+    });
+    window.setTimeout(() => {
+      if (this.falling) {
+        return;
+      }
+      this.mesh.traverse((child) => {
+        if (child instanceof THREE.Mesh && child.material instanceof THREE.MeshStandardMaterial) {
+          child.material.emissive.setHex(0x000000);
+        }
+      });
+    }, ms);
   }
 }

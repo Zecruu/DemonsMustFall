@@ -13,10 +13,11 @@ export default defineConfig({
   build: {
     target: "es2022",
     sourcemap: true,
+    chunkSizeWarningLimit: 900,
     rolldownOptions: {
       output: {
         codeSplitting: {
-          groups: [{ name: "phaser", test: /node_modules[\\/]phaser/ }],
+          groups: [{ name: "three", test: /node_modules[\\/]three/ }],
         },
       },
     },

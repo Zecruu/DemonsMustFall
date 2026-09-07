@@ -2,21 +2,30 @@
   "name": "demons-must-fall",
   "version": "0.1.0",
   "private": true,
-  "description": "Demons Must Fall — a TypeScript action/combat game scaffold.",
+  "description": "Demons Must Fall — a Three.js mobile action game scaffold for iOS.",
   "type": "module",
   "scripts": {
     "dev": "vite --host",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "ios:sync": "npm run build && cap sync ios",
+    "ios:open": "cap open ios"
   },
   "engines": {
     "node": ">=20"
   },
   "dependencies": {
-    "phaser": "^4.2.1"
+    "@capacitor/app": "^8.1.0",
+    "@capacitor/core": "^8.1.1",
+    "@capacitor/haptics": "^8.0.0",
+    "@capacitor/ios": "^8.1.1",
+    "@capacitor/status-bar": "^8.0.0",
+    "three": "^0.185.1"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.1.1",
+    "@types/three": "^0.185.4",
     "typescript": "^5.9.2",
     "vite": "^8.2.2"
   }

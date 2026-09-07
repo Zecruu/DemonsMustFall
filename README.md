@@ -1,68 +1,94 @@
 # Demons Must Fall
 
-A playable first scaffold for an indie arena combat game: you are the slayer, the demons chase, and they fall when struck.
+A playable first scaffold for a **mobile App Store** action game: you hunt demons in a 3D arena and they fall when struck.
 
-This is a foundation, not a finished game. The loop is small on purpose so later systems (bosses, loot, rooms, audio, desktop packaging) can land without a rewrite.
+This is a foundation, not a finished commercial build. The loop is small so later systems (bosses, rooms, art, audio, Game Center) can land without a rewrite.
 
 ## Stack
 
-- **TypeScript**
-- **Phaser 4** for scenes, input, arcade physics, and rendering
+- **TypeScript** + **Three.js** for the 3D combat scene
 - **Vite** for the web build
+- **Capacitor** to wrap that same build as a native iOS app for TestFlight / App Store
 
-The same web build can later be wrapped for desktop (Tauri or Electron) without changing the game code.
+Preview in a browser (desktop or phone). Ship to the App Store from Xcode on a Mac.
 
 ## Requirements
 
 - Node.js 20 or newer
-- npm 10 or newer
+- For App Store / device builds: a Mac with Xcode and an Apple Developer account
 
-## Run
+## Run (web preview)
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open the URL Vite prints (default `http://localhost:5173`). The title screen should appear immediately.
+Open the URL Vite prints (default `http://localhost:5173`). On a phone, use the Network URL on the same Wi-Fi.
 
 Other commands:
 
 ```bash
-npm run typecheck   # TypeScript only
-npm run build       # production bundle in dist/
-npm run preview     # serve the production bundle
+npm run typecheck
+npm run build
+npm run preview
 ```
 
 ## Controls
 
 | Input | Action |
 | --- | --- |
-| WASD or arrow keys | Move |
-| Space or click | Strike |
-| Enter | Start from the title |
-| R or click | Restart after you fall |
+| Left virtual stick | Move |
+| STRIKE button | Attack |
+| WASD or arrows | Move (desktop) |
+| Space | Attack (desktop) |
+| Begin the hunt / Enter | Start |
+| Rise again / R | Restart after you fall |
 
-Strike demons until their health is gone. They rotate and drop when they die. Clear a wave and the next one is larger. Touching a living demon costs a heart.
+Demons chase you. A strike that depletes their health makes them fall. Clear a wave and a larger one arrives. Touching a living demon costs a heart.
+
+## iOS / App Store
+
+The game is a web scene packaged with Capacitor (`com.zecruu.demonsmustfall`). The `ios/` Xcode project is already in the repo. Archive and upload still happen in Xcode on a Mac.
+
+```bash
+npm install
+npm run ios:sync
+npm run ios:open
+```
+
+In Xcode:
+
+1. Select the **App** target and your Team for signing
+2. Confirm the bundle id `com.zecruu.demonsmustfall`
+3. Add App Store icons, launch screen, and privacy strings as you flesh the game out
+4. Run on a device or Simulator
+5. Product → Archive → Distribute App when you are ready for TestFlight / App Store Connect
+
+Haptics and the status bar are wired through Capacitor plugins and no-op in the browser.
 
 ## Layout
 
 ```text
 src/
-  main.ts                 Game bootstrap
+  main.ts                 Bootstrap + native shell
   game/
-    config.ts             Phaser game config
-    data/constants.ts     Tunable combat and arena numbers
-    systems/combat.ts     Phaser-light combat helpers
+    Game.ts               Scene, camera, combat loop
+    meshes.ts             Procedural slayer / demon / arena
+    native.ts             Capacitor status bar + haptics
+    data/constants.ts     Tunable combat numbers
+    systems/combat.ts     Engine-light combat helpers
+    systems/input.ts      Stick, strike button, keyboard
     entities/             Player and demon behavior
-    scenes/               Boot, title, combat, game over
     ui/Hud.ts             Hearts, fallen count, wave
+capacitor.config.ts       iOS wrapper config
 ```
 
-Procedural textures are baked in `BootScene` so the first version has no binary art assets.
+Placeholder meshes are built in code so the first version has no binary art pack.
 
 ## Next (not in this PR)
 
-- Real sprite sheets, VFX, and audio
-- Rooms, elite demons, and a boss that must fall
-- Persistence and a desktop wrapper
+- Real characters, VFX, and audio
+- App icons, splash, and store listing assets
+- Rooms, elites, and a boss that must fall
+- Game Center / IAP only if you actually need them

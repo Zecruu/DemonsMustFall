@@ -1,4 +1,10 @@
-import Phaser from "phaser";
-import { gameConfig } from "./game/config";
+import { Game } from "./game/Game";
+import { configureNativeShell } from "./game/native";
 
-new Phaser.Game(gameConfig);
+const canvas = document.querySelector("#viewport");
+if (!(canvas instanceof HTMLCanvasElement)) {
+  throw new Error("Missing #viewport canvas");
+}
+
+void configureNativeShell();
+new Game(canvas);
