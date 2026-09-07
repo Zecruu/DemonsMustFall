@@ -10,7 +10,7 @@ Plan:
 [X] Catalog, map layout, scaling, economy, wave specs
 [X] Instanced demon horde + hero/tower placement combat
 [X] Touch UI: build bar, shop stub, campaign/endless
-[ ] Typecheck, browser-verify, commit, push, update PR
+[X] Typecheck, browser-verify, commit, push, update PR
 
 ## Lessons
 
