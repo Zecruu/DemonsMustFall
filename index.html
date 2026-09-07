@@ -17,31 +17,47 @@
     <div id="app">
       <canvas id="viewport"></canvas>
 
-      <div id="hud" class="hud" hidden>
-        <div id="hp" class="hud-hp"></div>
-        <div id="wave" class="hud-center"></div>
-        <div id="fallen" class="hud-right"></div>
-      </div>
-
-      <div id="touch" class="touch" hidden>
-        <div id="stick" class="stick" role="presentation" aria-label="Move">
-          <div id="stick-knob" class="stick-knob"></div>
-        </div>
-        <button id="attack" class="attack" type="button" aria-label="Strike">STRIKE</button>
-      </div>
-
       <section id="title" class="overlay">
-        <p class="kicker">iOS combat scaffold</p>
+        <p class="kicker">Tower heroes</p>
         <h1>Demons Must Fall</h1>
-        <p class="lede">Hunt them. Strike them. Watch them fall.</p>
-        <p class="hint">Stick to move · Strike to attack<br />Keyboard: WASD + Space</p>
-        <button id="start" type="button">Begin the hunt</button>
+        <p class="lede">One lane. A grid. Heroes and towers. Hordes that should not survive the walk.</p>
+        <div class="choices">
+          <button id="mode-campaign" type="button">Campaign · 8 waves</button>
+          <button id="mode-endless" class="ghost" type="button">Endless</button>
+        </div>
       </section>
 
-      <section id="gameover" class="overlay" hidden>
-        <h1>You have fallen</h1>
-        <p id="summary" class="lede"></p>
-        <button id="retry" type="button">Rise again</button>
+      <div id="play" hidden>
+        <header id="hud" class="hud">
+          <div id="lives"></div>
+          <div id="gold"></div>
+          <div id="gems"></div>
+          <div id="wave"></div>
+          <div id="obliterated"></div>
+        </header>
+        <p id="hint" class="hint"></p>
+        <div id="build-wrap" class="build-wrap">
+          <div id="build-bar" class="build-bar"></div>
+          <div class="actions">
+            <button id="unleash" type="button">Unleash wave</button>
+            <button id="shop-open" class="ghost" type="button">Shop</button>
+          </div>
+        </div>
+      </div>
+
+      <section id="shop" class="overlay sheet" hidden>
+        <p class="kicker">Bloodstones</p>
+        <h2>Shop</h2>
+        <p id="shop-gems" class="lede"></p>
+        <p class="hint">StoreKit / App Store IAP is stubbed. Preview grants let you test unlocks.</p>
+        <div id="shop-list"></div>
+        <button id="shop-close" class="ghost" type="button">Close</button>
+      </section>
+
+      <section id="end" class="overlay" hidden>
+        <h1 id="end-title"></h1>
+        <p id="end-body" class="lede"></p>
+        <button id="again" type="button">Return to keep</button>
       </section>
     </div>
     <script type="module" src="/src/main.ts"></script>

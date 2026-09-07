@@ -2,7 +2,7 @@
   "name": "demons-must-fall",
   "version": "0.1.0",
   "private": true,
-  "description": "Demons Must Fall — a Three.js mobile action game scaffold for iOS.",
+  "description": "Demons Must Fall — a Three.js tower-hero game scaffold for iOS.",
   "type": "module",
   "scripts": {
     "dev": "vite --host",

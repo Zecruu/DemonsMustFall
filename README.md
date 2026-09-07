@@ -1,23 +1,27 @@
 # Demons Must Fall
 
-A playable first scaffold for a **mobile App Store** action game: you hunt demons in a 3D arena and they fall when struck.
+A playable first scaffold for a **mobile tower-hero** game: one lane, a grid, heroes and towers you station beside the path, and hordes of demons that should not survive the walk.
 
-This is a foundation, not a finished commercial build. The loop is small so later systems (bosses, rooms, art, audio, Game Center) can land without a rewrite.
+This is a foundation, not a finished store build. The loop is small so later rooms, bosses, cosmetics, and StoreKit can land without a rewrite.
+
+## Fantasy
+
+You are holding the keep. Demons pour down a single lane. Place **heroes** (infinite scaling, distinct jobs) and **towers** (cheap lane tools) on the dark tiles beside the path. Campaign ends on a final host. Endless does not.
+
+It should feel like a flood getting deleted — lots of small demons, a running “fallen” count, splash heroes that cook the pack.
 
 ## Stack
 
-- **TypeScript** + **Three.js** for the 3D combat scene
-- **Vite** for the web build
-- **Capacitor** to wrap that same build as a native iOS app for TestFlight / App Store
-
-Preview in a browser (desktop or phone). Ship to the App Store from Xcode on a Mac.
+- **TypeScript** + **Three.js** (orthographic board, instanced horde)
+- **Vite** for the web preview
+- **Capacitor** (`com.zecruu.demonsmustfall`) for iOS / App Store
 
 ## Requirements
 
 - Node.js 20 or newer
-- For App Store / device builds: a Mac with Xcode and an Apple Developer account
+- For device / App Store builds: a Mac with Xcode and an Apple Developer account
 
-## Run (web preview)
+## Run
 
 ```bash
 npm install
@@ -26,30 +30,42 @@ npm run dev
 
 Open the URL Vite prints (default `http://localhost:5173`). On a phone, use the Network URL on the same Wi-Fi.
 
-Other commands:
-
 ```bash
 npm run typecheck
 npm run build
 npm run preview
 ```
 
-## Controls
+## How to play
+
+1. Choose **Campaign** (8 waves, last is The Falling Host) or **Endless**
+2. Tap a card, then tap a dark tile beside the lane
+3. **Unleash wave** (or press Space)
+4. Between waves, tap a stationed unit twice to upgrade
+5. Heroes scale forever. Towers stop at level 5.
 
 | Input | Action |
 | --- | --- |
-| Left virtual stick | Move |
-| STRIKE button | Attack |
-| WASD or arrows | Move (desktop) |
-| Space | Attack (desktop) |
-| Begin the hunt / Enter | Start |
-| Rise again / R | Restart after you fall |
+| Tap card, tap tile | Place hero or tower |
+| Tap unit twice (build phase) | Upgrade |
+| Unleash wave / Space | Start the next horde |
+| 1–5 | Select cards |
+| Shop | Bloodstones + hero unlock stub |
 
-Demons chase you. A strike that depletes their health makes them fall. Clear a wave and a larger one arrives. Touching a living demon costs a heart.
+Kael shreds single targets. Nyx deletes clumps. Spike / Flame are the cheap towers. Seraph (slow aura) is locked behind Bloodstones.
+
+## Monetization (stub)
+
+The shop is wired as data, not as a live App Store purchase:
+
+- Soft currency: gold from kills and wave clear
+- Premium: Bloodstones (preview grant in this scaffold)
+- IAP product ids live in `src/game/data/economy.ts`
+- Seraph unlock costs Bloodstones
+
+Next step on a Mac is a Capacitor Purchases / StoreKit plugin — do not ship the preview grant.
 
 ## iOS / App Store
-
-The game is a web scene packaged with Capacitor (`com.zecruu.demonsmustfall`). The `ios/` Xcode project is already in the repo. Archive and upload still happen in Xcode on a Mac.
 
 ```bash
 npm install
@@ -57,38 +73,25 @@ npm run ios:sync
 npm run ios:open
 ```
 
-In Xcode:
-
-1. Select the **App** target and your Team for signing
-2. Confirm the bundle id `com.zecruu.demonsmustfall`
-3. Add App Store icons, launch screen, and privacy strings as you flesh the game out
-4. Run on a device or Simulator
-5. Product → Archive → Distribute App when you are ready for TestFlight / App Store Connect
-
-Haptics and the status bar are wired through Capacitor plugins and no-op in the browser.
+The `ios/` Xcode project is already in the repo. Signing, icons polish, and App Store Connect are still on you.
 
 ## Layout
 
 ```text
-src/
-  main.ts                 Bootstrap + native shell
-  game/
-    Game.ts               Scene, camera, combat loop
-    meshes.ts             Procedural slayer / demon / arena
-    native.ts             Capacitor status bar + haptics
-    data/constants.ts     Tunable combat numbers
-    systems/combat.ts     Engine-light combat helpers
-    systems/input.ts      Stick, strike button, keyboard
-    entities/             Player and demon behavior
-    ui/Hud.ts             Hearts, fallen count, wave
-capacitor.config.ts       iOS wrapper config
+src/game/
+  Game.ts                 Board, placement, waves
+  data/catalog.ts         Heroes + towers
+  data/economy.ts         IAP product stubs
+  systems/scaling.ts      Infinite hero curve, wave size
+  systems/waves.ts        Campaign final wave / endless
+  map/                    One-lane grid
+  entities/Horde.ts       Instanced demons
+  entities/Structures.ts  Heroes and towers
+  ui/                     HUD, build bar, shop
 ```
-
-Placeholder meshes are built in code so the first version has no binary art pack.
 
 ## Next (not in this PR)
 
-- Real characters, VFX, and audio
-- App icons, splash, and store listing assets
-- Rooms, elites, and a boss that must fall
-- Game Center / IAP only if you actually need them
+- More lanes, elites, and a named boss host
+- Real StoreKit, hero gacha/pity if you actually want it
+- Art, audio, and a proper live-ops calendar

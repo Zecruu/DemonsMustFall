@@ -2,17 +2,15 @@
 
 ## Scratchpad
 
-Task: Pivot the scaffold from Phaser to Three.js for a mobile App Store game. Keep a playable combat skeleton, Capacitor iOS path, and update the existing PR.
+Task: Rebuild as a mobile tower-hero game — one-lane grid, place heroes and towers, wave-based demon hordes, monetization hooks, infinite hero scaling, campaign final wave + endless.
 
-Stack: TypeScript + Three.js + Vite + Capacitor (iOS / App Store). Touch-first controls, keyboard still works for desktop preview.
+Stack: TypeScript + Three.js + Vite + Capacitor iOS. Keep the native wrapper; replace the action-arena loop.
 
 Plan:
-[X] Existing Phaser scaffold PR is the starting point
-[ ] Remove Phaser and add Three.js + Capacitor
-[ ] 3D arena combat loop with touch joystick + strike
-[ ] README: web run + iOS/App Store steps
-[ ] Typecheck, build, commit, push, update PR
-[ ] Browser-verify desktop + mobile viewports
+[X] Catalog, map layout, scaling, economy, wave specs
+[X] Instanced demon horde + hero/tower placement combat
+[X] Touch UI: build bar, shop stub, campaign/endless
+[ ] Typecheck, browser-verify, commit, push, update PR
 
 ## Lessons
 
@@ -34,10 +32,11 @@ Plan:
 - Vite 8 uses Rolldown: split vendor chunks with `build.rolldownOptions.output.codeSplitting.groups`, not object-form `manualChunks`
 - This game targets iOS App Store: prefer Three.js + Capacitor, not Phaser. Native archive still requires a Mac + Xcode.
 - Three.js 0.185 ships JS only; install `@types/three` for `tsc`
+- Product direction: tower-hero defense (heroes + towers on a grid lane), not a third-person action arena
 
 ## Project
 
-- Keep combat numbers in `src/game/data/constants.ts`
-- Keep engine-light rules in `src/game/systems`
-- Ground plane is XZ; combat helpers use x/y mapped to x/z
-- Touch controls are the primary input; keyboard is for desktop preview
+- Keep combat/economy formulas in `src/game/systems` and catalogs in `src/game/data`
+- Ground plane is XZ; grid rows increase toward the base
+- Heroes scale infinitely; towers are cheaper utility with a level cap
+- IAP is structured, not wired to StoreKit yet
