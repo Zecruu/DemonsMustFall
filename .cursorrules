@@ -1,0 +1,42 @@
+# Demons Must Fall
+
+## Scratchpad
+
+Task: Replace the placeholder README-only repo with a playable first-version scaffold for an indie action/combat game named Demons Must Fall. Open a PR into main.
+
+Stack: TypeScript + Phaser 4.2 + Vite. 2D arena combat, web-first, desktop later via Tauri/Electron.
+
+Plan:
+[X] Create feature branch cursor/game-scaffold-ced6
+[X] Write project config (package.json, tsconfig, vite, gitignore)
+[X] Implement playable combat loop (player, demons, scene, HUD)
+[X] Write README with run instructions
+[ ] Install deps, typecheck, run the game
+[ ] Commit, push, open PR
+[ ] Browser-verify the playable loop
+[ ] Attach walkthrough artifacts
+
+## Lessons
+
+## User Specified Lessons
+
+- You have a python venv in ./venv. Use it.
+- Include info useful for debugging in the program output.
+- Read the file before you try to edit it.
+- Due to Cursor's limit, when you use `git` and `gh` and need to submit a multiline commit message, first write the message in a file, and then use `git commit -F <filename>` or similar command to commit. And then remove the file. Include "[Cursor] " in the commit message and PR title.
+
+## Cursor learned
+
+- For search results, ensure proper handling of different character encodings (UTF-8) for international queries
+- Add debug information to stderr while keeping the main output clean in stdout for better pipeline integration
+- When using seaborn styles in matplotlib, use 'seaborn-v0_8' instead of 'seaborn' as the style name due to recent seaborn version changes
+- Use 'gpt-4o' as the model name for OpenAI's GPT-4 with vision capabilities
+- Phaser 4 unifies v3 FX/Masks into Filters; avoid createGeometryMask/setMask in new code
+- Phaser 4 arcade gravity is a vector `{ x, y }`, not a single `y` number
+- Vite 8 uses Rolldown: split vendor chunks with `build.rolldownOptions.output.codeSplitting.groups`, not object-form `manualChunks`
+
+## Project
+
+- Keep combat numbers in `src/game/data/constants.ts`
+- Keep Phaser-light rules in `src/game/systems`
+- Bake placeholder art in `BootScene` until real assets exist
